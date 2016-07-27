@@ -40,3 +40,10 @@ header {
 .login-form{
     margin-top: 70px;
 }
+
+.product-available{
+    color: #00695c;
+}
+.product-notAvailable{
+    color: #e53935;
+}

@@ -31,7 +31,7 @@
                     <ul id="slide-out" class="side-nav">
                         <li><h3 class="center-align">Menu</h3></li>
                         <li><div class="divider"></div></li>
-                        <li><a class="waves-effect" href="#!">Productos</a></li>
+                        <li><a class="waves-effect" href="/admin/products">Productos</a></li>
                         <li><a class="waves-effect" href="#!">Vendedores</a></li>
                         <li><a class="waves-effect" href="#!">Ventas</a></li>
                         <li><a class="waves-effect" href="#!">Contacto</a></li>
@@ -47,12 +47,12 @@
     </header>
 </template>
 
-<Template name="footerTemplate">
+<template name="footerTemplate">
     <footer>
     </footer>
-</Template>
+</template>
 
-<Template name="loginTemplate">
+<template name="loginTemplate">
     <div class="container">
         <div class="row">
             <div class="col s4 offset-s4 login-form">
@@ -76,9 +76,9 @@
             </div>
         </div>
     </div>
-</Template>
+</template>
 
-<Template name="registerTemplate">
+<template name="registerTemplate">
     <div class="container">
         <div class="row">
             <div class="col s4 offset-s4 login-form">
@@ -102,7 +102,7 @@
             </div>
         </div>
     </div>
-</Template>
+</template>
 
 <template name="inventoryTemplate">
     <div class="container">
@@ -114,8 +114,8 @@
                     <div class="row">
                         <div class="input-field col l12 m12 s12">
                             <i class="material-icons prefix">search</i>
-                            <input id="icon_prefix" type="text" class="validate" style="text-transform: uppercase;letter-spacing: 0.1em;">
-                            <label for="icon_prefix" class="view_search_placeholder_txt">Buscar</label>
+                            <input id="search-query" type="text" class="validate" style="text-transform: uppercase;letter-spacing: 0.1em;">
+                            <label for="searchQuery" class="view_search_placeholder_txt">Buscar</label>
                         </div>
                     </div>
                 </form>
@@ -129,79 +129,88 @@
             <!--TABLE-->
             <ul class="collapsible" data-collapsible="accordion">
             {{#each products}}
-                <li>
-                    <div class="collapsible-header">
-                        <div class="row">
-                            <div class="col l1 m1 s2" style="/*margin-top: 22px;*/margin-top: 29px;padding-left: 0px;padding-right: 0px;width: 40px;">
-                                <img src={{image}} alt="" class="circle" style="width: 35px; height: 35px; /*margin: 0.25px 5px -6px;*/ margin:0;">
-                            </div>
-                            <div class="col l6 m6 s10" style="margin-top: 22px;">
-                                <span style="/*margin: 0 0 0 10px;*/margin: 0;">{{name}} -  {{amount}} unidades</span>
-                            </div>
-                            <div class="col l1 offset-l2 m1 offset-m2 s1 offset-s2" style="margin-top: 22px;">
-                                <span style="margin: 0 0 0 10px; font-weight: 600;">${{price}}</span>
-                            </div>
-                            <div class="col l1 offset-l1 m1 offset-m1 s2 offset-s4" style="margin-top: 22px;">
-                                <span style="margin: 0 0 0 10px; font-weight: 600;">{{amount}}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collapsible-body">
-                        <!--CONTENT-->
-                        <div class="row">
-                            <div class="col l4 m4 s4 center-align" style="margin-top: 22px;">
-                                <a class="btn-floating btn-large waves-effect waves-light blue lighten-2 true-btn"><i class="material-icons">power_settings_new</i></a>
-                            </div>
-                            <div class="col l4 m4 s4 center-align" style="margin-top: 22px;">
-                                <a class="btn-floating btn-large waves-effect waves-light green lighten-2 true-btn"><i class="material-icons">mode_edit</i></a>
-                            </div>
-                            <div class="col l4 m4 s4 center-align" style="margin-top: 22px;">
-                                <a class="btn-floating btn-large waves-effect waves-light red lighten-2 true-btn"><i class="material-icons">close</i></a>
-                            </div>
-                            <div class="col l12 m12 s12">
-                                <p>{{description}}</p>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                {{> productTemplate}}
                 {{/each}}
             </ul>
 
         </div>
     </div>
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a href="/admin/new-product" class="btn-floating btn-large waves-effect waves-light red">
+        <a href="/admin/product/new" class="btn-floating btn-large waves-effect waves-light red">
             <i class="large material-icons">add</i>
         </a>
     </div>
 </template>
 
+<template name="productTemplate">
+    <li>
+        <div class="collapsible-header">
+            <div class="row">
+                <div class="col l1 m1 s2" style="/*margin-top: 22px;*/margin-top: 29px;padding-left: 0px;padding-right: 0px;width: 40px;">
+                    <img src={{image}} alt="" class="circle" style="width: 35px; height: 35px; /*margin: 0.25px 5px -6px;*/ margin:0;">
+                </div>
+                <div class="col l6 m6 s10" style="margin-top: 22px;">
+                    <span style="/*margin: 0 0 0 10px;*/margin: 0;">{{name}} -  {{amount}} unidades - </span>
+                    {{#if isAvilable}}
+                        <span class="product-available">Disponible</span>
+                        {{else}}
+                        <span class="product-notAvailable">NO Disponible</span>
+                        {{/if}}
+                </div>
+                <div class="col l1 offset-l2 m1 offset-m2 s1 offset-s2" style="margin-top: 22px;">
+                    <span style="margin: 0 0 0 10px; font-weight: 600;">${{price}}</span>
+                </div>
+                <div class="col l1 offset-l1 m1 offset-m1 s2 offset-s4" style="margin-top: 22px;">
+                    <span style="margin: 0 0 0 10px; font-weight: 600;">{{amount}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="collapsible-body">
+            <!--CONTENT-->
+            <div class="row">
+                <div class="col l4 m4 s4 center-align" style="margin-top: 22px;">
+                    <a id="js-available-product" class="btn-floating btn-large waves-effect waves-light blue lighten-2 true-btn"><i class="material-icons">power_settings_new</i></a>
+                </div>
+                <div class="col l4 m4 s4 center-align" style="margin-top: 22px;">
+                    <a id="js-edit-product" class="btn-floating btn-large waves-effect waves-light green lighten-2 true-btn"><i class="material-icons">mode_edit</i></a>
+                </div>
+                <div class="col l4 m4 s4 center-align" style="margin-top: 22px;">
+                    <a id="js-delete-product" class="btn-floating btn-large waves-effect waves-light red lighten-2 true-btn"><i class="material-icons">delete</i></a>
+                </div>
+                <div class="col l12 m12 s12">
+                    <p>{{description}}</p>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>
+
 <template name="newProductForm">
     <div class="container">
         <h1>NUEVO PRODUCTO</h1>
-        <form class="col l12 m12 s12" id="js-new-product-form">
+        <form class="col l12 m12 s12" id="js-new-product-form" >
             <div class="row">
                 <div class="input-field col l12 m12 s12">
-                    <input type="text" id="product_name" name="product_name" style="letter-spacing: 0.1em;">
+                    <input type="text" id="product_name" name="product_name" style="letter-spacing: 0.1em;" required>
                     <label for="product_name">Nombre</label>
                 </div>
                 <div class="input-field col l4 m6 s6">
-                    <input type="text" id="product_code" name="product_code" style="letter-spacing: 0.1em;">
+                    <input type="text" id="product_code" name="product_code" style="letter-spacing: 0.1em;" required>
                     <label for="product_code">Codigo</label>
                 </div>
                 <div class="input-field col l4 m6 s6">
-                    <input type="number" id="product_price" name="product_price" class="validate" style="letter-spacing: 0.1em;">
+                    <input type="number" id="product_price" name="product_price" class="validate" style="letter-spacing: 0.1em;" required>
                     <label for="product_price">Precio</label>
                 </div>
                 <div class="input-field col l4 m6 s6">
-                    <input type="number" id="product_amount" name="product_amount" class="validate" style="letter-spacing: 0.1em;">
+                    <input type="number" id="product_amount" name="product_amount" class="validate" style="letter-spacing: 0.1em;" required>
                     <label for="product_amount">Cantidad</label>
                 </div>
                 <div class="input-field col l12 m6 s6 center-align">
                     <a class="btn-floating btn-large waves-effect waves-light cyan lighten-2 true-btn"><i class="material-icons">power_settings_new</i></a>
                 </div>
                 <div class="input-field col l12 m12 s12">
-                    <textarea id="product_description" name="product_description" class="materialize-textarea"></textarea>
+                    <textarea id="product_description" name="product_description" class="materialize-textarea" required></textarea>
                     <label for="product_description" style="font-weight: 300;letter-spacing: 0.1em;">Descripcion</label>
                 </div>
                 <div class="input-field col l12 m12 s12">
@@ -212,6 +221,42 @@
             <div class="row">
                 <div class="col l12 m12 s12 center-align">
                     <input class="btn waves-effect waves-light diff_bttn_color" type="submit" value="Agregar Producto">
+                </div>
+            </div>
+        </form>
+    </div>
+</template>
+
+<template name="editProductForm">
+    <div class="container">
+        <h1>EDITAR PRODUCTO</h1>
+        <form class="col l12 m12 s12" id="js-edit-product-form" >
+            <div class="row">
+                <div class="input-field col l12 m12 s12">
+                    <input type="text" id="product_name" name="product_name" style="letter-spacing: 0.1em;" required value={{product.name}}>
+                </div>
+                <div class="input-field col l4 m6 s6">
+                    <input type="text" id="product_code" name="product_code" style="letter-spacing: 0.1em;" required value={{product.code}}>
+                </div>
+                <div class="input-field col l4 m6 s6">
+                    <input type="number" id="product_price" name="product_price" class="validate" style="letter-spacing: 0.1em;" required value={{product.price}}>
+                </div>
+                <div class="input-field col l4 m6 s6">
+                    <input type="number" id="product_amount" name="product_amount" class="validate" style="letter-spacing: 0.1em;" required value={{product.amount}}>
+                </div>
+                <div class="input-field col l12 m6 s6 center-align">
+                    <a class="btn-floating btn-large waves-effect waves-light cyan lighten-2 true-btn"><i class="material-icons">power_settings_new</i></a>
+                </div>
+                <div class="input-field col l12 m12 s12">
+                    <textarea id="product_description" name="product_description" class="materialize-textarea" required value={{product.description}}></textarea>
+                </div>
+                <div class="input-field col l12 m12 s12">
+                    <input type="text" id="product_image" name="product_image" style="letter-spacing: 0.1em;" value={{product.image}}>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col l12 m12 s12 center-align">
+                    <input class="btn waves-effect waves-light diff_bttn_color" type="submit" value="Guardar Cambios">
                 </div>
             </div>
         </form>
