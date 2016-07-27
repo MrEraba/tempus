@@ -17,6 +17,33 @@ Template.inventoryTemplate.onRendered(function () {
     });
 });
 
+
+Template.loginTemplate.events({
+    'submit #js-login-form' (event){
+        event.preventDefault();
+        const target = event.target;
+
+        var email = target["user_email"].value;
+        var password = target["user_password"].value;
+
+        Meteor.loginWithPassword(email, password, function (error) {
+            if(error){
+                console.log(error.reason);
+            } else {
+                FlowRouter.go("/admin");
+            }
+        });
+    }
+});
+
+Template.headerTemplate.events({
+    'click #js-user-logout'(event){
+        event.preventDefault();
+        Meteor.logout();
+        FlowRouter.go('/');
+    }
+});
+
 Template.registerTemplate.events({
     'submit #js-register-form'(event){
         event.preventDefault();

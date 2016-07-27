@@ -35,6 +35,10 @@
                         <li><a class="waves-effect" href="#!">Vendedores</a></li>
                         <li><a class="waves-effect" href="#!">Ventas</a></li>
                         <li><a class="waves-effect" href="#!">Contacto</a></li>
+                        <li><div class="divider"></div></li>
+                        {{#if currentUser}}
+                            <li><a id="js-user-logout" class="waves-effect" href="#!">LogOut</a></li>
+                        {{/if}}
                     </ul>
             </div>
         </div>
