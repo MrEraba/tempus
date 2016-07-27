@@ -41,7 +41,21 @@ Template.headerTemplate.events({
         event.preventDefault();
         Meteor.logout();
         FlowRouter.go('/');
-    }
+    },
+    'click #js-be-admin'(event){
+        event.preventDefault();
+        var userId = Meteor.userId();
+
+        Meteor.call('addAdminRole',userId);
+        console.log('now you are an admin');
+    },
+    'click #js-be-seller'(event){
+        event.preventDefault();
+        var userId = Meteor.userId();
+
+        Meteor.call('addSellerRole',userId);
+        console.log('now you are a seller');
+    },
 });
 
 Template.registerTemplate.events({
