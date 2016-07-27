@@ -17,3 +17,23 @@ Template.inventoryTemplate.onRendered(function () {
     });
 });
 
+Template.registerTemplate.events({
+    'submit #js-register-form'(event){
+        event.preventDefault();
+        const target = event.target;
+
+        var email = target["user_email"].value;
+        var password = target["user_password"].value;
+
+        Accounts.createUser({
+            email: email,
+            password: password
+        });
+
+        target["user_email"].value = '';
+        target["user_password"].value = '';
+
+        console.log("Usuario creado XD");
+    }
+});
+
