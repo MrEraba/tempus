@@ -1,22 +1,15 @@
 import { Template } from 'meteor/templating';
-
+import {Products} from '../lib/api/products.js';
 import './main.html';
 
 Template.headerTemplate.onRendered(function () {
     $('.button-collapse').sideNav({
-            menuWidth: 300, // Default is 240
-            edge: 'right', // Choose the horizontal origin
-            closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
+            menuWidth: 300,
+            edge: 'right',
+            closeOnClick: true
         }
     );
 });
-
-Template.inventoryTemplate.onRendered(function () {
-    $('.collapsible').collapsible({
-        accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-    });
-});
-
 
 Template.loginTemplate.events({
     'submit #js-login-form' (event){
@@ -33,6 +26,26 @@ Template.loginTemplate.events({
                 FlowRouter.go("/admin");
             }
         });
+    }
+});
+
+Template.registerTemplate.events({
+    'submit #js-register-form'(event){
+        event.preventDefault();
+        const target = event.target;
+
+        var email = target["user_email"].value;
+        var password = target["user_password"].value;
+
+        Accounts.createUser({
+            email: email,
+            password: password
+        });
+
+        target["user_email"].value = '';
+        target["user_password"].value = '';
+
+        console.log("Usuario creado XD");
     }
 });
 
@@ -58,23 +71,49 @@ Template.headerTemplate.events({
     },
 });
 
-Template.registerTemplate.events({
-    'submit #js-register-form'(event){
+Template.newProductForm.events({
+    'submit #js-new-product-form'(event){
         event.preventDefault();
         const target = event.target;
+        var available = false;
+        if((target["product_amount"].value <= 0 )|| (target["product_amount"].value !== false)){
+            available = true;
+        }
 
-        var email = target["user_email"].value;
-        var password = target["user_password"].value;
+        const newProduct ={
+            name: target["product_name"].value,
+            code: target["product_code"].value,
+            amount: target["product_amount"].value,
+            price: target["product_price"].value,
+            available: available,
+            description: target["product_description"].value,
+            image: target["product_image"].value
+        }
 
-        Accounts.createUser({
-            email: email,
-            password: password
-        });
+        Meteor.call('products.insert', newProduct);
+        target["product_name"].value = '';
+        target["product_code"].value = '';
+        target["product_amount"].value = '';
+        target["product_price"].value = '';
+        target["product_description"].value = '';
+        target["product_image"].value = '';
 
-        target["user_email"].value = '';
-        target["user_password"].value = '';
-
-        console.log("Usuario creado XD");
+        FlowRouter.go('/admin/inventory');
     }
 });
 
+Template.inventoryTemplate.onRendered(function () {
+    $('.collapsible').collapsible({
+        accordion : true
+    });
+});
+
+Template.inventoryTemplate.onCreated(function () {
+    Meteor.subscribe('products');
+});
+
+Template.inventoryTemplate.helpers({
+    'products'(){
+        return Products.find({});
+    }
+});

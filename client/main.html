@@ -39,7 +39,7 @@
                         {{#if currentUser}}
                             <li><a id="js-user-logout" class="waves-effect" href="#!">LogOut</a></li>
                             <li><a id="js-be-admin" class="waves-effect" href="#!">Ser Admin</a></li>
-                            <li><a id="js-be-seller" class="waves-effect" href="#!">Ser Admin</a></li>
+                            <li><a id="js-be-seller" class="waves-effect" href="#!">Ser Seller</a></li>
                         {{/if}}
                     </ul>
             </div>
@@ -128,20 +128,21 @@
             </div>
             <!--TABLE-->
             <ul class="collapsible" data-collapsible="accordion">
+            {{#each products}}
                 <li>
                     <div class="collapsible-header">
                         <div class="row">
                             <div class="col l1 m1 s2" style="/*margin-top: 22px;*/margin-top: 29px;padding-left: 0px;padding-right: 0px;width: 40px;">
-                                <img src="images/pic01.jpg" alt="" class="circle" style="width: 35px; height: 35px; /*margin: 0.25px 5px -6px;*/ margin:0;">
+                                <img src={{image}} alt="" class="circle" style="width: 35px; height: 35px; /*margin: 0.25px 5px -6px;*/ margin:0;">
                             </div>
                             <div class="col l6 m6 s10" style="margin-top: 22px;">
-                                <span style="/*margin: 0 0 0 10px;*/margin: 0;">Producto Random - Lorem Ipsum 50 unidades individual</span>
+                                <span style="/*margin: 0 0 0 10px;*/margin: 0;">{{name}} -  {{amount}} unidades</span>
                             </div>
                             <div class="col l1 offset-l2 m1 offset-m2 s1 offset-s2" style="margin-top: 22px;">
-                                <span style="margin: 0 0 0 10px; font-weight: 600;">$12.89</span>
+                                <span style="margin: 0 0 0 10px; font-weight: 600;">${{price}}</span>
                             </div>
                             <div class="col l1 offset-l1 m1 offset-m1 s2 offset-s4" style="margin-top: 22px;">
-                                <span style="margin: 0 0 0 10px; font-weight: 600;">129</span>
+                                <span style="margin: 0 0 0 10px; font-weight: 600;">{{amount}}</span>
                             </div>
                         </div>
                     </div>
@@ -158,16 +159,18 @@
                                 <a class="btn-floating btn-large waves-effect waves-light red lighten-2 true-btn"><i class="material-icons">close</i></a>
                             </div>
                             <div class="col l12 m12 s12">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sem nulla, posuere vitae lacus in, consequat posuere mi. Morbi sodales, urna sed egestas placerat, dolor nisi commodo tortor, ut iaculis justo orci eget lectus. Duis pellentesque nibh in elit vehicula gravida. Proin sit amet sapien enim.</p>
+                                <p>{{description}}</p>
                             </div>
                         </div>
                     </div>
                 </li>
+                {{/each}}
             </ul>
+
         </div>
     </div>
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large waves-effect waves-light red">
+        <a href="/admin/new-product" class="btn-floating btn-large waves-effect waves-light red">
             <i class="large material-icons">add</i>
         </a>
     </div>
@@ -175,41 +178,43 @@
 
 <template name="newProductForm">
     <div class="container">
-        <h1>Nuevo Producto</h1>
-        <form class="col l12 m12 s12">
+        <h1>NUEVO PRODUCTO</h1>
+        <form class="col l12 m12 s12" id="js-new-product-form">
             <div class="row">
                 <div class="input-field col l12 m12 s12">
-                    <input type="text" class="" style="text-transform: uppercase;letter-spacing: 0.1em;">
-                    <label class="view_search_placeholder_txt">Nombre</label>
+                    <input type="text" id="product_name" name="product_name" style="letter-spacing: 0.1em;">
+                    <label for="product_name">Nombre</label>
                 </div>
                 <div class="input-field col l4 m6 s6">
-                    <input type="text" class="" style="text-transform: uppercase;letter-spacing: 0.1em;">
-                    <label class="view_search_placeholder_txt">ID</label>
+                    <input type="text" id="product_code" name="product_code" style="letter-spacing: 0.1em;">
+                    <label for="product_code">Codigo</label>
                 </div>
                 <div class="input-field col l4 m6 s6">
-                    <input type="text" class="" style="text-transform: uppercase;letter-spacing: 0.1em;">
-                    <label class="view_search_placeholder_txt">Precio</label>
+                    <input type="number" id="product_price" name="product_price" class="validate" style="letter-spacing: 0.1em;">
+                    <label for="product_price">Precio</label>
                 </div>
                 <div class="input-field col l4 m6 s6">
-                    <input type="text" class="" style="text-transform: uppercase;letter-spacing: 0.1em;">
-                    <label class="view_search_placeholder_txt">Cantidad</label>
+                    <input type="number" id="product_amount" name="product_amount" class="validate" style="letter-spacing: 0.1em;">
+                    <label for="product_amount">Cantidad</label>
                 </div>
                 <div class="input-field col l12 m6 s6 center-align">
                     <a class="btn-floating btn-large waves-effect waves-light cyan lighten-2 true-btn"><i class="material-icons">power_settings_new</i></a>
                 </div>
                 <div class="input-field col l12 m12 s12">
-                    <textarea id="textarea1" class="materialize-textarea"></textarea>
-                    <label for="textarea1" style="font-weight: 300;letter-spacing: 0.1em;text-transform: uppercase;">Descripcion</label>
+                    <textarea id="product_description" name="product_description" class="materialize-textarea"></textarea>
+                    <label for="product_description" style="font-weight: 300;letter-spacing: 0.1em;">Descripcion</label>
+                </div>
+                <div class="input-field col l12 m12 s12">
+                    <input type="text" id="product_image" name="product_image" style="letter-spacing: 0.1em;">
+                    <label for="product_image">Imagen</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col l12 m12 s12 center-align">
+                    <input class="btn waves-effect waves-light diff_bttn_color" type="submit" value="Agregar Producto">
                 </div>
             </div>
         </form>
-    </div>
-    <div class="row">
-        <div class="col l12 m12 s12 center-align">
-            <button class="btn waves-effect waves-light diff_bttn_color" type="submit" name="action">Agregar
-                <i class="material-icons right">send</i>
-            </button>
-        </div>
     </div>
 </template>
 
