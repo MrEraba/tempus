@@ -4,6 +4,7 @@ import {Session} from 'meteor/session';
 import {ReactiveVar} from 'meteor/reactive-var';
 import './main.html';
 
+//  HEADER TEMPLATE
 Template.headerTemplate.onRendered(function () {
     $('.button-collapse').sideNav({
             menuWidth: 300,
@@ -12,7 +13,9 @@ Template.headerTemplate.onRendered(function () {
         }
     );
 });
+//  /HEADER TEMPLATE
 
+//  LOGIN TEMPLATE
 Template.loginTemplate.events({
     'submit #js-login-form' (event){
         event.preventDefault();
@@ -30,27 +33,34 @@ Template.loginTemplate.events({
         });
     }
 });
+//  /LOGIN TEMPLATE
 
+//  REGISTER TEMPLATE
 Template.registerTemplate.events({
     'submit #js-register-form'(event){
         event.preventDefault();
         const target = event.target;
 
         var email = target["user_email"].value;
+        var username = target["user_username"].value;
         var password = target["user_password"].value;
 
         Accounts.createUser({
             email: email,
+            username: username,
             password: password
         });
 
         target["user_email"].value = '';
+        target["user_username"].value = '';
         target["user_password"].value = '';
 
         console.log("Usuario creado XD");
     }
 });
+//  /REGISTER TEMPLATE
 
+//  HEADER TEMPLATE
 Template.headerTemplate.events({
     'click #js-user-logout'(event){
         event.preventDefault();
@@ -72,7 +82,9 @@ Template.headerTemplate.events({
         console.log('now you are a seller');
     },
 });
+//  /HEADER TEMPLATE
 
+//  INVENTORY TEMPLATE
 Template.inventoryTemplate.onRendered(function () {
     $('.collapsible').collapsible({
         accordion : true
@@ -103,7 +115,9 @@ Template.inventoryTemplate.events({
         }
     }
 });
+//  /INVENTORY TEMPLATE
 
+//  PRODUCT TEMPLATE
 Template.productTemplate.helpers({
     'isAvilable'(){
         return this.available;
@@ -122,7 +136,9 @@ Template.productTemplate.events({
         FlowRouter.go('/admin/product/edit');
     }
 });
+//  PRODUCT TEMPLATE
 
+// NEW PRODUCT TEMPLATE
 Template.newProductForm.events({
     'submit #js-new-product-form'(event){
         event.preventDefault();
@@ -153,7 +169,9 @@ Template.newProductForm.events({
         //FlowRouter.go('/admin/products');
     }
 });
+//  /NEW PRODUCT TEMPLATE
 
+//  EDIT PRODUCT FORM TEMPLATE
 Template.editProductForm.onCreated(function () {
     Meteor.subscribe('products');
 });
@@ -180,6 +198,38 @@ Template.editProductForm.events({
         Meteor.call('products.update', Session.get("productForEdit") ,product);
         Session.set("productForEdit", "");
         FlowRouter.go('/admin/products');
+    },
+    'click #js-cancel-edit-product'(){
+        $('#product_name').val('');
+        $('#product_code').val('');
+        $('#product_image').val('');
+        $('#product_amount').val('');
+        $('#product_description').val('');
+        $('#product_price').val('');
+
+        FlowRouter.go('/admin/products');
+    }
+});
+//  /EDIT PRODUCT TEMPLATE
+
+//  SELLER LIST TEMPLATE
+Template.sellersListTemplate.onCreated(function () {
+    Meteor.subscribe('users');
+});
+
+Template.sellersListTemplate.onRendered(function () {
+});
+
+Template.sellersListTemplate.helpers({
+    'sellers'(){
+        return Meteor.users.find({roles: ['seller']});
     }
 });
 
+//  /SELLER LIST TEMPLATE
+
+Template.sellerTemplate.helpers({
+    'email'(){
+        return this.emails[0].address;
+    }
+});
